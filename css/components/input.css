@@ -1,0 +1,13 @@
+#inputTexto {
+    display: flex;
+    justify-content: center;
+    width: 768px;
+    padding: 10px;
+    font-size: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: #f1f1f1;
+}
+
+p {
+    color: #f1f1f1;
+}

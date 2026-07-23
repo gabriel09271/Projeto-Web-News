@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turismo e Viagens</title>
     <link rel="stylesheet" href="../css/main.css">
-    <script></script>
 </head>
 <body>
     <header class="cabecalho">
@@ -19,8 +18,19 @@
                 <a href="#">Saiba mais</a>
                 <a href="#">Contato</a>
             </nav>
-    </header>
-    <main></main>
+        </header>
+
+        <main class="principal">
+            
+            <p id="inputTexto">Busque pontos turísticos de qualquer cidade</p>
+
+            <input type="text" id="cidade" name="cidade">
+            <button id="pesquisar">Pesquisar</button>
+            <div id="resultado"></div>
+            
+            <script src="/js/services/nominatim.js"></script>
+        </main>
+
     <footer></footer>
 </body>
 </html>
