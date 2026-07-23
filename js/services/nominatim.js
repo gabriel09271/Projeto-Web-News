@@ -42,20 +42,17 @@ async function pesquisarCidade() {
         
             (
                 node["tourism"="attraction"]
-                (around:3000,${latitude},${longitude});
+                (around:2000,${latitude},${longitude});
 
                 node["tourism"="museum"]
-                (around:3000,${latitude},${longitude});
-
-                node["historic"]
-                (around:3000,${latitude},${longitude});
+                (around:2000,${latitude},${longitude});
             );
             
-            out;
+            out 10;
         `
 
             const respostaPontos = await fetch(
-                 "https://overpass.kumi.systems/api/interpreter",
+                 "https://overpass-api.de/api/interpreter",
                 {
                     method: "POST",
                     body: query
@@ -78,7 +75,7 @@ async function pesquisarCidade() {
     
 }
 
-function mostrarPontos(pontos) {
+async function mostrarPontos(pontos) {
     resultado.innerHTML = ""
 
     if (pontos.length === 0) {
@@ -88,24 +85,67 @@ function mostrarPontos(pontos) {
         return
     }
 
-    pontos.forEach((ponto) => {
+    for(const ponto of pontos) {
+        
         const nome = 
         ponto.tags?.name || "Ponto turístico sem nome"
+        
+        const imagem = await buscarImagem(nome)
 
-        let tipo = 
-        ponto.tags?.tourism ||
-        ponto.tags?.historic ||
-        "Não informado"
+        if(!imagem) {
+            continue
+        }
 
-        const card = document.createElement("div")
+        const img = new Image()
 
-        card.classList.add("card");
+        img.src = imagem
+        img.alt = nome
+        
+        img.onload = function () {
+            const card = document.createElement("div")
 
-        card.innerHTML = 
-        `
-        <h2>${nome}</h2>
-        `
+            card.classList.add("card")
 
+            card.innerHTML =
+            `
+            <h2>${nome}</h2>
+            `
+            card.appendChild(img)
+    
         resultado.appendChild(card)
-    })
+    }
+
+    img.oneerror = function () {
+        console.log(`Imagem não carregou: ${nome}`)
+        }
+    }
 }
+
+
+async function buscarImagem(nomePonto) {
+    const url = `https://commons.wikimedia.org/w/api.php
+        ?action=query
+        &generator=search
+        &gsrsearch=${encodeURIComponent(nomePonto)}
+        &gsrnamespace=6
+        &gsrlimit=1
+        &prop=imageinfo
+        &iiprop=url
+        &format=json
+        &origin=*`
+        .replace(/\s+/g, "");
+
+        const resposta = await fetch(url)
+
+        const dados = await resposta.json()
+
+        const paginas = dados.query?.pages;
+
+        if(!paginas) {
+            return null
+        }
+
+        const pagina = Object.values(paginas)[0]
+
+        return pagina.imageinfo?.[0]?.url || null
+    }

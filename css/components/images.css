@@ -1,0 +1,9 @@
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
